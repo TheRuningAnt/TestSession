@@ -248,7 +248,6 @@ didFinishDownloadingToURL:(NSURL *)location{
     
     NSURL *urlOfSave = [NSURL fileURLWithPath:paths[0]];
     urlOfSave = [urlOfSave URLByAppendingPathComponent:@"冰河世纪.mov"];
-    NSLog(@"%@",urlOfSave);
     
     NSFileManager *fileManager = [NSFileManager defaultManager];
     if ([fileManager fileExistsAtPath:urlOfSave.path]) {
@@ -276,6 +275,10 @@ didFinishDownloadingToURL:(NSURL *)location{
         [self.timer invalidate];
         self.avPlayer = nil;
     }
+}
+
+- (void)URLSession:(NSURLSession *)session didBecomeInvalidWithError:(nullable NSError *)error{
+    NSLog(@"%@",error);
 }
 
 - (void)didReceiveMemoryWarning {
