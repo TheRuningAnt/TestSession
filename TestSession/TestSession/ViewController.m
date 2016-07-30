@@ -51,7 +51,7 @@
 //开始下载
 - (IBAction)startDownload:(id)sender {
     //下载之前检查下是否已经下载该视频
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
     NSURL *urlOfMV = [NSURL fileURLWithPath:paths[0]];
     urlOfMV = [urlOfMV URLByAppendingPathComponent:@"冰河世纪.mov"];
     NSFileManager *manager = [NSFileManager defaultManager];
@@ -136,11 +136,12 @@
     [self.view addSubview:self.progressView];
     
     //移除缓存的资源
-    NSString *document = NSHomeDirectory();
-    NSString *strOfMV = [document stringByAppendingString:@"/Documents/冰河世纪.mov"];
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
+    NSURL *urlOfMV = [NSURL fileURLWithPath:paths[0]];
+    urlOfMV = [urlOfMV URLByAppendingPathComponent:@"冰河世纪.mov"];
     NSFileManager *manager = [NSFileManager defaultManager];
-    if ([manager fileExistsAtPath:strOfMV]) {
-        [manager removeItemAtPath:strOfMV error:nil];
+    if ([manager fileExistsAtPath:urlOfMV.path]) {
+        [manager removeItemAtPath:urlOfMV.path error:nil];
     }
     
     self.avPlayer = nil;
@@ -243,9 +244,11 @@ totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite{
 
 - (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask
 didFinishDownloadingToURL:(NSURL *)location{
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
+    
     NSURL *urlOfSave = [NSURL fileURLWithPath:paths[0]];
     urlOfSave = [urlOfSave URLByAppendingPathComponent:@"冰河世纪.mov"];
+    NSLog(@"%@",urlOfSave);
     
     NSFileManager *fileManager = [NSFileManager defaultManager];
     if ([fileManager fileExistsAtPath:urlOfSave.path]) {
