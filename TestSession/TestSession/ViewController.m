@@ -63,7 +63,7 @@
     }else if([manager fileExistsAtPath:urlOfMV.path]) {
         [self addMVPlayerWithFileUrl:urlOfMV];
         [self.avPlayer play];
-    }else if(self.downloadData){
+    }else if(self.downloadData.bytes != 0){
         [self resumeDownload:nil];
     }else{
         [self.downloadTask resume];
@@ -93,7 +93,7 @@
         [self tipViewWithMessage:@"正在播放"];
         return;
     }
-    if (self.downloadData) {
+    if (self.downloadData.bytes != 0) {
         self.downloadTask = [self.session downloadTaskWithResumeData:self.downloadData];
         [self.downloadTask resume];
         self.downloading = true;
@@ -198,7 +198,7 @@
                                                 progressValue:0.0
                                                      fontSize:24
                                                      autoLoad:NO];
-        _progressView.center = CGPointMake(k_ScreenWidth/2, 240);
+        _progressView.center = CGPointMake(k_ScreenWidth/2, 140);
     }
     return _progressView;
 }
@@ -235,6 +235,7 @@
       didWriteData:(int64_t)bytesWritten
  totalBytesWritten:(int64_t)totalBytesWritten
 totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite{
+    
     if(self.downloading){
     dispatch_async(dispatch_get_main_queue(), ^{
         [self.progressView setProgress:1.0 * totalBytesWritten / totalBytesExpectedToWrite];
